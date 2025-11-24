@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Farmacia Centrale</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --color-background: #F2F6F9;
+            --color-surface: #FFFFFF;
+            --color-text: #1A202C;
+            --color-text-secondary: #718096;
+            --color-primary: #2D9CDB;
+            --gradient-primary: linear-gradient(135deg, #32B8C6 0%, #2DA6B2 100%);
+            --color-teal-500: #32B8C6;
+            --color-teal-600: #2DA6B2;
+            --color-error: #FF6B6B;
+            --color-success: #51CF66;
+            --space-8: 8px;
+            --space-12: 12px;
+            --space-16: 16px;
+            --space-20: 20px;
+            --space-24: 24px;
+            --space-32: 32px;
+            --radius-sm: 12px;
+            --radius-md: 20px;
+            --radius-lg: 30px;
+            --radius-full: 9999px;
+            --shadow-md: 0 12px 24px -10px rgba(50, 184, 198, 0.15);
+            --shadow-lg: 0 20px 40px -15px rgba(0, 0, 0, 0.1);
+            --shadow-float: 0 10px 30px rgba(50, 184, 198, 0.25);
+            --font-family-base: 'Outfit', sans-serif;
+            --font-size-sm: 13px;
+            --font-size-base: 15px;
+            --font-size-lg: 17px;
+            --font-size-xl: 20px;
+            --font-size-2xl: 24px;
+            --font-size-3xl: 32px;
+            --font-weight-normal: 400;
+            --font-weight-medium: 500;
+            --font-weight-bold: 700;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            font-size: var(--font-size-base);
+            color: var(--color-text);
+            background-color: var(--color-background);
+            background-image:
+                radial-gradient(circle at 0% 0%, rgba(50, 184, 198, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(255, 154, 158, 0.05) 0%, transparent 50%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-20);
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: var(--space-32);
+        }
+
+        .logo-container h1 {
+            font-size: var(--font-size-3xl);
+            font-weight: var(--font-weight-bold);
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: var(--space-8);
+        }
+
+        .logo-container p {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            font-weight: var(--font-weight-medium);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .auth-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: var(--space-32);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: var(--space-8);
+            margin-bottom: var(--space-24);
+            background: var(--color-background);
+            padding: var(--space-8);
+            border-radius: var(--radius-md);
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: var(--space-12);
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text-secondary);
+            transition: all 0.3s;
+        }
+
+        .auth-tab.active {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: var(--space-16);
+        }
+
+        .form-label {
+            display: block;
+            font-weight: var(--font-weight-medium);
+            margin-bottom: var(--space-8);
+            color: var(--color-text);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: var(--space-16);
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-base);
+            background: var(--color-background);
+            color: var(--color-text);
+            transition: all 0.3s;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+            font-family: var(--font-family-base);
+        }
+
+        .form-control:focus {
+            outline: none;
+            background: var(--color-surface);
+            box-shadow: 0 0 0 3px rgba(50, 184, 198, 0.2);
+        }
+
+        .btn {
+            display: inline-block;
+            width: 100%;
+            padding: var(--space-16) var(--space-32);
+            border: none;
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-bold);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            letter-spacing: 0.5px;
+            box-shadow: var(--shadow-md);
+            font-family: var(--font-family-base);
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            box-shadow: var(--shadow-float);
+            transform: translateY(-2px);
+            filter: brightness(1.05);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .alert {
+            padding: var(--space-16);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--space-16);
+            font-size: var(--font-size-sm);
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-error {
+            background: rgba(255, 107, 107, 0.1);
+            color: var(--color-error);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+
+        .alert-success {
+            background: rgba(81, 207, 102, 0.1);
+            color: var(--color-success);
+            border: 1px solid rgba(81, 207, 102, 0.3);
+        }
+
+        .password-hint {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            margin-top: var(--space-8);
+        }
+
+        @media (max-width: 768px) {
+            .auth-card {
+                padding: var(--space-24);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="auth-container">
+        <div class="logo-container">
+            <h1>Farmacia Picco</h1>
+            <p>OFFICINA DELLA SALUTE</p>
+        </div>
+
+        <div class="auth-card">
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="switchAuthMode('login')">Accedi</button>
+                <button class="auth-tab" onclick="switchAuthMode('register')">Registrati</button>
+            </div>
+
+            <div id="alert-message" class="alert"></div>
+
+            <!-- Login Form -->
+            <form id="login-form" class="auth-form active" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" id="login-email" class="form-control" required placeholder="tua@email.com">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" id="login-password" class="form-control" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn btn-primary">Accedi</button>
+            </form>
+
+            <!-- Register Form -->
+            <form id="register-form" class="auth-form" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label class="form-label">Nome Completo</label>
+                    <input type="text" id="register-name" class="form-control" required placeholder="Mario Rossi">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" id="register-email" class="form-control" required placeholder="tua@email.com">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Telefono</label>
+                    <input type="tel" id="register-phone" class="form-control" required placeholder="333 1234567">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" id="register-password" class="form-control" required placeholder="••••••••"
+                        minlength="6">
+                    <div class="password-hint">Minimo 6 caratteri</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Conferma Password</label>
+                    <input type="password" id="register-password-confirm" class="form-control" required
+                        placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn btn-primary">Crea Account</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script>
+        function switchAuthMode(mode) {
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            const tabs = document.querySelectorAll('.auth-tab');
+            const alert = document.getElementById('alert-message');
+
+            // Hide alert
+            alert.classList.remove('show');
+
+            if (mode === 'login') {
+                loginForm.classList.add('active');
+                registerForm.classList.remove('active');
+                tabs[0].classList.add('active');
+                tabs[1].classList.remove('active');
+            } else {
+                loginForm.classList.remove('active');
+                registerForm.classList.add('active');
+                tabs[0].classList.remove('active');
+                tabs[1].classList.add('active');
+            }
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            // Check if admin credentials
+            if (email === 'admin@farmacia.it' && password === 'admin123') {
+                const result = adminLogin(email, password);
+                showAlert(result.message, result.success ? 'success' : 'error');
+
+                if (result.success) {
+                    setTimeout(() => {
+                        window.location.href = 'admin.html';
+                    }, 1000);
+                }
+            } else {
+                // Regular user login
+                const result = login(email, password);
+                showAlert(result.message, result.success ? 'success' : 'error');
+
+                if (result.success) {
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1000);
+                }
+            }
+        }
+
+        function handleRegister(event) {
+            event.preventDefault();
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const phone = document.getElementById('register-phone').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-password-confirm').value;
+
+            if (password !== confirmPassword) {
+                showAlert('Le password non corrispondono', 'error');
+                return;
+            }
+
+            const result = register(name, email, phone, password);
+            showAlert(result.message, result.success ? 'success' : 'error');
+
+            if (result.success) {
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000);
+            }
+        }
+
+        function showAlert(message, type) {
+            const alert = document.getElementById('alert-message');
+            alert.textContent = message;
+            alert.className = `alert alert-${type} show`;
+        }
+    </script>
+</body>
+
+</html>

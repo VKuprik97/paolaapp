@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Farmacia Centrale</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --color-background: #F2F6F9;
+            --color-surface: #FFFFFF;
+            --color-text: #1A202C;
+            --color-text-secondary: #718096;
+            --color-primary: #2D9CDB;
+            --gradient-primary: linear-gradient(135deg, #32B8C6 0%, #2DA6B2 100%);
+            --color-teal-500: #32B8C6;
+            --color-teal-600: #2DA6B2;
+            --color-error: #FF6B6B;
+            --color-success: #51CF66;
+            --color-warning: #FFA500;
+            --space-8: 8px;
+            --space-12: 12px;
+            --space-16: 16px;
+            --space-20: 20px;
+            --space-24: 24px;
+            --space-32: 32px;
+            --radius-sm: 12px;
+            --radius-md: 20px;
+            --radius-lg: 30px;
+            --radius-full: 9999px;
+            --shadow-md: 0 12px 24px -10px rgba(50, 184, 198, 0.15);
+            --shadow-lg: 0 20px 40px -15px rgba(0, 0, 0, 0.1);
+            --shadow-float: 0 10px 30px rgba(50, 184, 198, 0.25);
+            --font-family-base: 'Outfit', sans-serif;
+            --font-size-sm: 13px;
+            --font-size-base: 15px;
+            --font-size-lg: 17px;
+            --font-size-xl: 20px;
+            --font-size-2xl: 24px;
+            --font-size-3xl: 32px;
+            --font-weight-normal: 400;
+            --font-weight-medium: 500;
+            --font-weight-bold: 700;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            font-size: var(--font-size-base);
+            color: var(--color-text);
+            background-color: var(--color-background);
+            background-image:
+                radial-gradient(circle at 0% 0%, rgba(50, 184, 198, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(255, 154, 158, 0.05) 0%, transparent 50%);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+
+        /* Login Container */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-20);
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 450px;
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: var(--space-32);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: var(--space-32);
+        }
+
+        .login-header h1 {
+            font-size: var(--font-size-3xl);
+            font-weight: var(--font-weight-bold);
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: var(--space-8);
+        }
+
+        .login-header p {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            font-weight: var(--font-weight-medium);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Dashboard Container */
+        .dashboard-container {
+            display: none;
+            padding: var(--space-24);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-32);
+            padding: var(--space-20);
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .dashboard-title h1 {
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .dashboard-title p {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            margin-top: var(--space-8);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-20);
+            margin-bottom: var(--space-32);
+        }
+
+        .stat-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: var(--space-24);
+            box-shadow: var(--shadow-md);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-12);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .stat-icon.primary {
+            background: rgba(50, 184, 198, 0.1);
+            color: var(--color-teal-500);
+        }
+
+        .stat-icon.success {
+            background: rgba(81, 207, 102, 0.1);
+            color: var(--color-success);
+        }
+
+        .stat-icon.warning {
+            background: rgba(255, 165, 0, 0.1);
+            color: var(--color-warning);
+        }
+
+        .stat-value {
+            font-size: var(--font-size-3xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-text);
+        }
+
+        .stat-label {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            font-weight: var(--font-weight-medium);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: var(--space-12);
+            margin-bottom: var(--space-24);
+            background: var(--color-surface);
+            padding: var(--space-12);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .tab {
+            flex: 1;
+            padding: var(--space-12) var(--space-20);
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text-secondary);
+            transition: all 0.3s;
+            font-family: var(--font-family-base);
+        }
+
+        .tab.active {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .card {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: var(--space-24);
+            box-shadow: var(--shadow-md);
+            margin-bottom: var(--space-24);
+        }
+
+        .card h2 {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-20);
+            color: var(--color-text);
+        }
+
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: var(--space-12);
+            background: var(--color-background);
+            color: var(--color-text);
+            font-weight: var(--font-weight-bold);
+            font-size: var(--font-size-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: var(--space-16) var(--space-12);
+            border-bottom: 1px solid var(--color-background);
+            color: var(--color-text-secondary);
+        }
+
+        tr:hover {
+            background: rgba(50, 184, 198, 0.05);
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: var(--space-16);
+        }
+
+        .form-label {
+            display: block;
+            font-weight: var(--font-weight-medium);
+            margin-bottom: var(--space-8);
+            color: var(--color-text);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: var(--space-16);
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-base);
+            background: var(--color-background);
+            color: var(--color-text);
+            transition: all 0.3s;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+            font-family: var(--font-family-base);
+        }
+
+        .form-control:focus {
+            outline: none;
+            background: var(--color-surface);
+            box-shadow: 0 0 0 3px rgba(50, 184, 198, 0.2);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: var(--space-12) var(--space-24);
+            border: none;
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-bold);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            letter-spacing: 0.5px;
+            box-shadow: var(--shadow-md);
+            font-family: var(--font-family-base);
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            box-shadow: var(--shadow-float);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: var(--color-success);
+            color: white;
+            padding: var(--space-8) var(--space-16);
+            font-size: var(--font-size-sm);
+        }
+
+        .btn-danger {
+            background: var(--color-error);
+            color: white;
+            padding: var(--space-8) var(--space-16);
+            font-size: var(--font-size-sm);
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-block;
+            padding: var(--space-4) var(--space-12);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .status-pending {
+            background: rgba(255, 165, 0, 0.1);
+            color: var(--color-warning);
+        }
+
+        .status-confirmed {
+            background: rgba(81, 207, 102, 0.1);
+            color: var(--color-success);
+        }
+
+        .status-cancelled {
+            background: rgba(255, 107, 107, 0.1);
+            color: var(--color-error);
+        }
+
+        /* Alert */
+        .alert {
+            padding: var(--space-16);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--space-16);
+            font-size: var(--font-size-sm);
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-error {
+            background: rgba(255, 107, 107, 0.1);
+            color: var(--color-error);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+
+        .alert-success {
+            background: rgba(81, 207, 102, 0.1);
+            color: var(--color-success);
+            border: 1px solid rgba(81, 207, 102, 0.3);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Search Box */
+        .search-box {
+            margin-bottom: var(--space-20);
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            table {
+                font-size: var(--font-size-sm);
+            }
+
+            th,
+            td {
+                padding: var(--space-8);
+            }
+        }
+    </style>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+    <!-- Login View -->
+    <div id="login-view" class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h1>Admin Dashboard</h1>
+                <p>FARMACIA CENTRALE</p>
+            </div>
+
+            <div id="login-alert" class="alert"></div>
+
+            <form id="admin-login-form" onsubmit="handleAdminLogin(event)">
+                <div class="form-group">
+                    <label class="form-label">Email Admin</label>
+                    <input type="email" id="admin-email" class="form-control" required placeholder="admin@farmacia.it">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" id="admin-password" class="form-control" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Accedi</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard View -->
+    <div id="dashboard-view" class="dashboard-container">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <h1>Dashboard Amministratore</h1>
+                <p>Gestione Farmacia Centrale</p>
+            </div>
+            <button onclick="handleLogout()" class="btn btn-danger">Esci</button>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon primary">
+                        <i data-lucide="users"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="stat-users">0</div>
+                <div class="stat-label">Clienti Registrati</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon success">
+                        <i data-lucide="calendar"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="stat-appointments">0</div>
+                <div class="stat-label">Appuntamenti Totali</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon warning">
+                        <i data-lucide="clock"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="stat-today">0</div>
+                <div class="stat-label">Appuntamenti Oggi</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon warning">
+                        <i data-lucide="alert-circle"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="stat-pending">0</div>
+                <div class="stat-label">In Attesa</div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="switchSection('appointments')">Appuntamenti</button>
+            <button class="tab" onclick="switchSection('clients')">Clienti</button>
+        </div>
+
+        <!-- Appointments Section -->
+        <div id="appointments-section" class="content-section active">
+            <div class="card">
+                <h2>Gestione Appuntamenti</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Cliente</th>
+                                <th>Data</th>
+                                <th>Ora</th>
+                                <th>Servizio</th>
+                                <th>Telefono</th>
+                                <th>Stato</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appointments-table">
+                            <tr>
+                                <td colspan="8" style="text-align: center;">Nessun appuntamento</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Clients Section -->
+        <div id="clients-section" class="content-section">
+            <div class="card">
+                <h2>Clienti Registrati</h2>
+                <div class="search-box">
+                    <input type="text" id="client-search" class="form-control" placeholder="Cerca per nome o email..."
+                        onkeyup="filterClients()">
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Telefono</th>
+                                <th>Data Registrazione</th>
+                            </tr>
+                        </thead>
+                        <tbody id="clients-table">
+                            <tr>
+                                <td colspan="4" style="text-align: center;">Nessun cliente</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Check if already logged in as admin
+        if (isAdmin()) {
+            showDashboard();
+        }
+
+        // Handle admin login
+        function handleAdminLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('admin-email').value;
+            const password = document.getElementById('admin-password').value;
+
+            const result = adminLogin(email, password);
+            showAlert(result.message, result.success ? 'success' : 'error');
+
+            if (result.success) {
+                setTimeout(() => {
+                    showDashboard();
+                }, 1000);
+            }
+        }
+
+        // Show alert
+        function showAlert(message, type) {
+            const alert = document.getElementById('login-alert');
+            alert.textContent = message;
+            alert.className = `alert alert-${type} show`;
+
+            setTimeout(() => {
+                alert.classList.remove('show');
+            }, 3000);
+        }
+
+        // Show dashboard
+        function showDashboard() {
+            document.getElementById('login-view').style.display = 'none';
+            document.getElementById('dashboard-view').style.display = 'block';
+            loadDashboardData();
+            lucide.createIcons();
+        }
+
+        // Load dashboard data
+        function loadDashboardData() {
+            // Load statistics
+            const stats = getAdminStats();
+            if (stats) {
+                document.getElementById('stat-users').textContent = stats.totalUsers;
+                document.getElementById('stat-appointments').textContent = stats.totalAppointments;
+                document.getElementById('stat-today').textContent = stats.appointmentsToday;
+                document.getElementById('stat-pending').textContent = stats.pendingAppointments;
+            }
+
+            // Load appointments
+            loadAppointments();
+
+            // Load clients
+            loadClients();
+        }
+
+        // Load appointments
+        function loadAppointments() {
+            const appointments = getAllAppointments();
+            const tbody = document.getElementById('appointments-table');
+
+            if (appointments.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;">Nessun appuntamento</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = appointments.map(apt => {
+                const status = apt.status || 'pending';
+                const statusClass = status === 'confirmed' ? 'status-confirmed' :
+                    status === 'cancelled' ? 'status-cancelled' : 'status-pending';
+                const statusText = status === 'confirmed' ? 'Confermato' :
+                    status === 'cancelled' ? 'Cancellato' : 'In Attesa';
+
+                return `
+          <tr>
+            <td>#${apt.id.slice(-6)}</td>
+            <td><strong>${apt.userName}</strong><br><small>${apt.userEmail}</small></td>
+            <td>${formatDate(apt.date)}</td>
+            <td>${apt.time}</td>
+            <td>${apt.service}</td>
+            <td>${apt.userPhone}</td>
+            <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+            <td>
+              ${status !== 'confirmed' ? `<button class="btn btn-success" onclick="confirmAppointment('${apt.id}')">Conferma</button>` : ''}
+              ${status !== 'cancelled' ? `<button class="btn btn-danger" onclick="cancelAppointment('${apt.id}')">Cancella</button>` : ''}
+            </td>
+          </tr>
+        `;
+            }).join('');
+
+            lucide.createIcons();
+        }
+
+        // Load clients
+        let allClients = [];
+        function loadClients() {
+            allClients = getAllUsers();
+            displayClients(allClients);
+        }
+
+        function displayClients(clients) {
+            const tbody = document.getElementById('clients-table');
+
+            if (clients.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Nessun cliente</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = clients.map(client => `
+        <tr>
+          <td><strong>${client.name}</strong></td>
+          <td>${client.email}</td>
+          <td>${client.phone}</td>
+          <td>${formatDateTime(client.createdAt)}</td>
+        </tr>
+      `).join('');
+        }
+
+        // Filter clients
+        function filterClients() {
+            const search = document.getElementById('client-search').value.toLowerCase();
+            const filtered = allClients.filter(client =>
+                client.name.toLowerCase().includes(search) ||
+                client.email.toLowerCase().includes(search)
+            );
+            displayClients(filtered);
+        }
+
+        // Confirm appointment
+        function confirmAppointment(id) {
+            const result = updateAppointmentStatus(id, 'confirmed');
+            if (result.success) {
+                loadDashboardData();
+            }
+        }
+
+        // Cancel appointment
+        function cancelAppointment(id) {
+            if (confirm('Sei sicuro di voler cancellare questo appuntamento?')) {
+                adminDeleteAppointment(id);
+                loadDashboardData();
+            }
+        }
+
+        // Switch section
+        function switchSection(section) {
+            // Update tabs
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update sections
+            document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById(`${section}-section`).classList.add('active');
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const date = new Date(dateString + 'T00:00:00');
+            return date.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        }
+
+        // Format datetime
+        function formatDateTime(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        }
+
+        // Logout
+        function handleLogout() {
+            if (confirm('Sei sicuro di voler uscire?')) {
+                logout();
+            }
+        }
+    </script>
+</body>
+
+</html>

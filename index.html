@@ -619,12 +619,13 @@
     }
   </style>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="js/auth.js"></script>
 </head>
 
 <body>
   <div class="app-header">
     <h1>Farmacia Picco</h1>
-    <p>OFFICINA DELLA SALUTE</p>
+    <p id="user-greeting">OFFICINA DELLA SALUTE</p>
   </div>
 
   <!-- Home Tab -->
@@ -825,6 +826,57 @@
     </div>
   </div>
 
+  <!-- Account Tab -->
+  <div id="account-tab" class="tab-content">
+    <div class="card">
+      <h2>Mio Account</h2>
+      <div id="account-alert" class="alert" style="display: none;"></div>
+
+      <div class="form-group">
+        <h3>Informazioni Personali</h3>
+      </div>
+
+      <form id="profile-form" onsubmit="handleProfileUpdate(event)">
+        <div class="form-group">
+          <label class="form-label">Nome Completo</label>
+          <input type="text" id="profile-name" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" id="profile-email" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Telefono</label>
+          <input type="tel" id="profile-phone" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full">Salva Modifiche</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h3>Cambia Password</h3>
+      <form id="password-form" onsubmit="handlePasswordChange(event)">
+        <div class="form-group">
+          <label class="form-label">Password Attuale</label>
+          <input type="password" id="current-password" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nuova Password</label>
+          <input type="password" id="new-password" class="form-control" required minlength="6">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Conferma Nuova Password</label>
+          <input type="password" id="confirm-password" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full">Cambia Password</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <button onclick="handleLogout()" class="btn btn-danger btn-full">Esci dall'Account</button>
+    </div>
+  </div>
+
   <!-- Bottom Navigation -->
   <nav class="bottom-nav">
     <button class="nav-item active" data-tab="home" onclick="switchTab('home')">
@@ -843,11 +895,90 @@
       <div class="nav-icon"><i data-lucide="bot"></i></div>
       <div>Consulente AI</div>
     </button>
+    <button class="nav-item" data-tab="account" onclick="switchTab('account')">
+      <div class="nav-icon"><i data-lucide="user"></i></div>
+      <div>Account</div>
+    </button>
   </nav>
 
   <script>
+    // Require authentication
+    requireAuth();
+
     // Initialize Lucide Icons
     lucide.createIcons();
+
+    // Display user greeting
+    function updateUserGreeting() {
+      const user = getCurrentUser();
+      if (user) {
+        document.getElementById('user-greeting').textContent = `Ciao, ${user.name.split(' ')[0]}!`;
+      }
+    }
+
+    // Load user profile data
+    function loadUserProfile() {
+      const user = getCurrentUser();
+      if (user) {
+        document.getElementById('profile-name').value = user.name;
+        document.getElementById('profile-email').value = user.email;
+        document.getElementById('profile-phone').value = user.phone;
+      }
+    }
+
+    // Handle profile update
+    function handleProfileUpdate(event) {
+      event.preventDefault();
+      const name = document.getElementById('profile-name').value;
+      const email = document.getElementById('profile-email').value;
+      const phone = document.getElementById('profile-phone').value;
+
+      const result = updateProfile(name, email, phone);
+      showAccountAlert(result.message, result.success ? 'success' : 'error');
+
+      if (result.success) {
+        updateUserGreeting();
+      }
+    }
+
+    // Handle password change
+    function handlePasswordChange(event) {
+      event.preventDefault();
+      const currentPassword = document.getElementById('current-password').value;
+      const newPassword = document.getElementById('new-password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+
+      if (newPassword !== confirmPassword) {
+        showAccountAlert('Le nuove password non corrispondono', 'error');
+        return;
+      }
+
+      const result = changePassword(currentPassword, newPassword);
+      showAccountAlert(result.message, result.success ? 'success' : 'error');
+
+      if (result.success) {
+        document.getElementById('password-form').reset();
+      }
+    }
+
+    // Show alert in account section
+    function showAccountAlert(message, type) {
+      const alert = document.getElementById('account-alert');
+      alert.textContent = message;
+      alert.className = `alert alert-${type}`;
+      alert.style.display = 'block';
+
+      setTimeout(() => {
+        alert.style.display = 'none';
+      }, 5000);
+    }
+
+    // Handle logout
+    function handleLogout() {
+      if (confirm('Sei sicuro di voler uscire?')) {
+        logout();
+      }
+    }
     // Medicine Database
     const medicines = [
       {
@@ -1057,6 +1188,9 @@
       if (tabName === 'medicine') {
         document.getElementById('medicine-result').innerHTML = '';
       }
+      if (tabName === 'account') {
+        loadUserProfile(); // Load user data when account tab is opened
+      }
     }
 
     // Search Mode Toggle
@@ -1090,7 +1224,32 @@
         notes: document.getElementById('apt-notes').value
       };
 
-      createAppointment(appointmentData);
+      // Save appointment using auth.js function
+      const result = saveAppointment(appointmentData);
+
+      if (result.success) {
+        // Show confirmation
+        const confirmationDiv = document.getElementById('appointment-confirmation');
+        confirmationDiv.innerHTML = `
+          <div class="alert alert-success">
+            <strong><i data-lucide="check-circle" class="icon-sm"></i> Appuntamento confermato!</strong><br>
+            Data: ${formatDate(result.appointment.date)} alle ${result.appointment.time}<br>
+            Servizio: ${result.appointment.service}
+          </div>
+        `;
+        lucide.createIcons({ root: confirmationDiv });
+        confirmationDiv.style.display = 'block';
+
+        // Update appointments list
+        updateAppointmentsList();
+
+        // Hide confirmation after 2 seconds
+        setTimeout(() => {
+          confirmationDiv.style.display = 'none';
+          hideBookingForm();
+        }, 2000);
+      }
+
       this.reset();
     });
 
@@ -1144,6 +1303,9 @@
     function updateAppointmentsList() {
       const listDiv = document.getElementById('appointments-list');
 
+      // Get user's appointments from auth.js
+      appointments = getUserAppointments();
+
       if (appointments.length === 0) {
         listDiv.innerHTML = '<div class="alert alert-info">Nessun appuntamento prenotato.</div>';
         return;
@@ -1169,7 +1331,7 @@
     // Cancel Appointment
     function cancelAppointment(id) {
       if (confirm('Sei sicuro di voler cancellare questo appuntamento?')) {
-        appointments = appointments.filter(apt => apt.id !== id);
+        deleteAppointment(id);
         updateAppointmentsList();
       }
     }
@@ -1437,7 +1599,7 @@
 
         case 'confirm':
           if (lowerMessage.includes('sì') || lowerMessage.includes('si') || lowerMessage.includes('ok') || lowerMessage.includes('certo')) {
-            createAppointment({
+            saveAppointment({
               date: bookingState.data.date, // Note: In a real app, validate format YYYY-MM-DD
               time: bookingState.data.time,
               service: bookingState.data.service,
@@ -1477,6 +1639,8 @@
     window.addEventListener('DOMContentLoaded', function () {
       initializeDatePicker();
       updateAppointmentsList();
+      updateUserGreeting();
+      loadUserProfile();
     });
   </script>
 </body>
