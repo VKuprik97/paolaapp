@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Admin Data</title>
+</head>
+
+<body>
+    <h1>Test Admin Data</h1>
+    <div id="output"></div>
+
+    <script src="js/auth.js"></script>
+    <script>
+        const output = document.getElementById('output');
+
+        // Login as admin first
+        const loginResult = adminLogin('admin@farmacia.it', 'admin123');
+        output.innerHTML += `<p>Admin Login: ${loginResult.success ? 'SUCCESS' : 'FAILED'}</p>`;
+
+        // Check if admin
+        const isAdminResult = isAdmin();
+        output.innerHTML += `<p>Is Admin: ${isAdminResult ? 'YES' : 'NO'}</p>`;
+
+        // Get users from localStorage
+        const usersRaw = localStorage.getItem('users');
+        output.innerHTML += `<p>Users in localStorage: ${usersRaw || 'EMPTY'}</p>`;
+
+        // Try to get all users
+        const users = getAllUsers();
+        output.innerHTML += `<p>getAllUsers() returned: ${users.length} users</p>`;
+
+        if (users.length > 0) {
+            output.innerHTML += '<h2>Users List:</h2><ul>';
+            users.forEach(user => {
+                output.innerHTML += `<li>${user.name} - ${user.email}</li>`;
+            });
+            output.innerHTML += '</ul>';
+        }
+    </script>
+</body>
+
+</html>
