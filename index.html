@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="it">
 
 <head>
@@ -85,9 +85,36 @@
     .app-header {
       background: transparent;
       color: var(--color-text);
-      padding: var(--space-32) var(--space-20) var(--space-12);
-      text-align: center;
+      padding: var(--space-24) var(--space-20) var(--space-12);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       box-shadow: none;
+    }
+
+    .header-content {
+      text-align: left;
+    }
+
+    .header-account-btn {
+      background: var(--color-surface);
+      border: none;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-md);
+      color: var(--color-primary);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .header-account-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-float);
+      color: var(--color-teal-600);
     }
 
     .app-header h1 {
@@ -625,8 +652,13 @@
 
 <body>
   <div class="app-header">
-    <h1>Farmacia Picco</h1>
-    <p id="user-greeting">OFFICINA DELLA SALUTE</p>
+    <div class="header-content">
+      <h1>Farmacia Picco</h1>
+      <p id="user-greeting">OFFICINA DELLA SALUTE</p>
+    </div>
+    <button class="header-account-btn" onclick="switchTab('account')">
+      <i data-lucide="user" style="width: 24px; height: 24px;"></i>
+    </button>
   </div>
 
   <!-- Home Tab -->
@@ -810,7 +842,7 @@
     <div class="card">
       <h2>Consulente AI</h2>
       <p style="color: var(--color-text-secondary); margin-bottom: 16px;">Fai domande sulla salute e sui farmaci. L'AI
-        ti fornirà informazioni utili.</p>
+        ti fornirГ  informazioni utili.</p>
 
       <div class="chat-container">
         <div class="chat-messages" id="chat-messages">
@@ -896,10 +928,7 @@
       <div class="nav-icon"><i data-lucide="bot"></i></div>
       <div>Consulente AI</div>
     </button>
-    <button class="nav-item" data-tab="account" onclick="switchTab('account')">
-      <div class="nav-icon"><i data-lucide="user"></i></div>
-      <div>Account</div>
-    </button>
+
   </nav>
 
   <script>
@@ -991,7 +1020,7 @@
         instructions: 'Con acqua dopo i pasti',
         sideeffects: 'Mal di stomaco, bruciore, reazioni allergiche',
         contraindications: 'Ulcera gastrica, allergia all\'aspirina',
-        storage: 'A temperatura ambiente, al riparo dall\'umidità'
+        storage: 'A temperatura ambiente, al riparo dall\'umiditГ '
       },
       {
         name: 'Tachipirina',
@@ -1011,7 +1040,7 @@
         dosage: '200-400 mg',
         frequency: 'Ogni 4-6 ore, massimo 1200 mg al giorno',
         instructions: 'Con cibo o latte per evitare disturbi allo stomaco',
-        sideeffects: 'Nausea, acidità, dolori addominali',
+        sideeffects: 'Nausea, aciditГ , dolori addominali',
         contraindications: 'Ulcera, allergia FANS, problemi renali',
         storage: 'A temperatura ambiente'
       },
@@ -1051,7 +1080,7 @@
       {
         name: 'Omeprazolo',
         ingredient: 'Omeprazolo',
-        uses: 'Acidità, reflusso gastroesofageo, ulcera',
+        uses: 'AciditГ , reflusso gastroesofageo, ulcera',
         dosage: '20-40 mg',
         frequency: 'Una volta al giorno, prima dei pasti',
         instructions: 'Ingoiare intero, non masticare',
@@ -1139,7 +1168,7 @@
       {
         name: 'Vitamina D3',
         ingredient: 'Colecalciferolo',
-        uses: 'Carenza vitamina D, ossa, immunità',
+        uses: 'Carenza vitamina D, ossa, immunitГ ',
         dosage: '1000-4000 IU',
         frequency: 'Una volta al giorno con cibo',
         instructions: 'Con pasto contenente grassi',
@@ -1486,57 +1515,57 @@
       // Check for medicine names
       for (const med of medicines) {
         if (lowerMessage.includes(med.name.toLowerCase())) {
-          return `${med.name} è un farmaco contenente ${med.ingredient}. È utilizzato per: ${med.uses}. Il dosaggio tipico è ${med.dosage}, ${med.frequency}. Si assume ${med.instructions}. Per informazioni dettagliate, consulta la sezione Farmaci o parla con il farmacista.`;
+          return `${med.name} ГЁ un farmaco contenente ${med.ingredient}. Г€ utilizzato per: ${med.uses}. Il dosaggio tipico ГЁ ${med.dosage}, ${med.frequency}. Si assume ${med.instructions}. Per informazioni dettagliate, consulta la sezione Farmaci o parla con il farmacista.`;
         }
       }
 
       // Health topics
       if (lowerMessage.includes('febbre')) {
-        return 'Per la febbre, è consigliabile assumere antipiretici come Tachipirina (paracetamolo) o Aspirina. Bevi molti liquidi e riposa. Se la febbre supera i 39°C o persiste per più di 3 giorni, consulta un medico.';
+        return 'Per la febbre, ГЁ consigliabile assumere antipiretici come Tachipirina (paracetamolo) o Aspirina. Bevi molti liquidi e riposa. Se la febbre supera i 39В°C o persiste per piГ№ di 3 giorni, consulta un medico.';
       }
 
       if (lowerMessage.includes('mal di testa') || lowerMessage.includes('emicrania')) {
-        return 'Per il mal di testa, puoi assumere Tachipirina, Aspirina o Ibuprofene. Riposa in un ambiente tranquillo e buio. Se il mal di testa è frequente o molto intenso, consulta un medico.';
+        return 'Per il mal di testa, puoi assumere Tachipirina, Aspirina o Ibuprofene. Riposa in un ambiente tranquillo e buio. Se il mal di testa ГЁ frequente o molto intenso, consulta un medico.';
       }
 
       if (lowerMessage.includes('dolore') || lowerMessage.includes('male')) {
         return 'Per il dolore lieve-moderato, sono efficaci Tachipirina, Aspirina o Ibuprofene. Segui le indicazioni sul dosaggio. Se il dolore persiste o peggiora, consulta un medico o un farmacista.';
       }
 
-      if (lowerMessage.includes('stomaco') || lowerMessage.includes('acidità') || lowerMessage.includes('bruciore')) {
-        return 'Per problemi di acidità o bruciore di stomaco, l\'Omeprazolo può aiutare. Evita cibi grassi, piccanti e alcol. Mangia porzioni più piccole e non coricarti subito dopo i pasti. Se i sintomi persistono, consulta un medico.';
+      if (lowerMessage.includes('stomaco') || lowerMessage.includes('aciditГ ') || lowerMessage.includes('bruciore')) {
+        return 'Per problemi di aciditГ  o bruciore di stomaco, l\'Omeprazolo puГІ aiutare. Evita cibi grassi, piccanti e alcol. Mangia porzioni piГ№ piccole e non coricarti subito dopo i pasti. Se i sintomi persistono, consulta un medico.';
       }
 
       if (lowerMessage.includes('allergia') || lowerMessage.includes('prurito')) {
-        return 'Per allergie e pruriti, antistaminici come Loratadina o Cetirizina possono aiutare. Evita gli allergeni noti. Se hai reazioni gravi come difficoltà respiratorie, chiama immediatamente il 118.';
+        return 'Per allergie e pruriti, antistaminici come Loratadina o Cetirizina possono aiutare. Evita gli allergeni noti. Se hai reazioni gravi come difficoltГ  respiratorie, chiama immediatamente il 118.';
       }
 
       if (lowerMessage.includes('pressione') || lowerMessage.includes('ipertensione')) {
-        return 'La pressione alta richiede monitoraggio regolare e spesso farmaci come Ramipril o Bisoprololo. Mantieni uno stile di vita sano: riduci il sale, fai attività fisica, evita lo stress. Consulta sempre il medico per la terapia adeguata.';
+        return 'La pressione alta richiede monitoraggio regolare e spesso farmaci come Ramipril o Bisoprololo. Mantieni uno stile di vita sano: riduci il sale, fai attivitГ  fisica, evita lo stress. Consulta sempre il medico per la terapia adeguata.';
       }
 
       if (lowerMessage.includes('colesterolo')) {
-        return 'Per il colesterolo alto, farmaci come Atorvastatina possono essere prescritti. Importante anche la dieta: riduci grassi saturi, aumenta fibre e omega-3. Fai attività fisica regolare. Consulta il medico per un piano personalizzato.';
+        return 'Per il colesterolo alto, farmaci come Atorvastatina possono essere prescritti. Importante anche la dieta: riduci grassi saturi, aumenta fibre e omega-3. Fai attivitГ  fisica regolare. Consulta il medico per un piano personalizzato.';
       }
 
       if (lowerMessage.includes('diabete') || lowerMessage.includes('glicemia')) {
-        return 'Il diabete tipo 2 può essere gestito con farmaci come Metformina, dieta equilibrata e attività fisica. Controlla regolarmente la glicemia. È fondamentale il supporto di un medico e un dietologo.';
+        return 'Il diabete tipo 2 puГІ essere gestito con farmaci come Metformina, dieta equilibrata e attivitГ  fisica. Controlla regolarmente la glicemia. Г€ fondamentale il supporto di un medico e un dietologo.';
       }
 
       if (lowerMessage.includes('vitamina')) {
-        return 'Le vitamine sono importanti per la salute. La Vitamina D3 è essenziale per ossa e sistema immunitario. Una dieta varia fornisce la maggior parte delle vitamine necessarie. Per integratori specifici, consulta il farmacista o il medico.';
+        return 'Le vitamine sono importanti per la salute. La Vitamina D3 ГЁ essenziale per ossa e sistema immunitario. Una dieta varia fornisce la maggior parte delle vitamine necessarie. Per integratori specifici, consulta il farmacista o il medico.';
       }
 
       if (lowerMessage.includes('orari') || lowerMessage.includes('aperto')) {
-        return 'La Farmacia Centrale è aperta: Lun-Ven 08:30-20:00, Sabato 08:30-19:00, Domenica 09:00-13:00. Siamo in Via Roma, 123 a Vercelli. Tel: +39 0161 234567.';
+        return 'La Farmacia Centrale ГЁ aperta: Lun-Ven 08:30-20:00, Sabato 08:30-19:00, Domenica 09:00-13:00. Siamo in Via Roma, 123 a Vercelli. Tel: +39 0161 234567.';
       }
 
       // Default responses
       const defaultResponses = [
         'Grazie per la tua domanda. Per consigli personalizzati sui farmaci, ti consiglio di consultare direttamente il farmacista. Posso aiutarti con informazioni generali sui farmaci nel nostro database.',
-        'È importante consultare un professionista sanitario per diagnosi e trattamenti specifici. Posso fornirti informazioni generali sui farmaci. Cerca un farmaco specifico nella sezione "Farmaci" per maggiori dettagli.',
+        'Г€ importante consultare un professionista sanitario per diagnosi e trattamenti specifici. Posso fornirti informazioni generali sui farmaci. Cerca un farmaco specifico nella sezione "Farmaci" per maggiori dettagli.',
         'Per una consulenza personalizzata, ti invito a prenotare un appuntamento con il nostro farmacista. Nel frattempo, posso aiutarti con informazioni generali sulla salute e sui farmaci.',
-        'La tua salute è importante! Per questioni specifiche, consulta sempre un medico o farmacista. Posso fornirti informazioni generali sui farmaci e consigli di benessere.'
+        'La tua salute ГЁ importante! Per questioni specifiche, consulta sempre un medico o farmacista. Posso fornirti informazioni generali sui farmaci e consigli di benessere.'
       ];
 
       return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
@@ -1591,15 +1620,15 @@
           bookingState.data.name = message;
           bookingState.step = 'confirm';
           return `Riepilogo prenotazione:
-          📅 Data: ${bookingState.data.date}
-          🕐 Ora: ${bookingState.data.time}
-          🏥 Servizio: ${bookingState.data.service}
-          👤 Nome: ${bookingState.data.name}
+          рџ“… Data: ${bookingState.data.date}
+          рџ•ђ Ora: ${bookingState.data.time}
+          рџЏҐ Servizio: ${bookingState.data.service}
+          рџ‘¤ Nome: ${bookingState.data.name}
           
-          Confermi la prenotazione? (Sì/No)`;
+          Confermi la prenotazione? (SГ¬/No)`;
 
         case 'confirm':
-          if (lowerMessage.includes('sì') || lowerMessage.includes('si') || lowerMessage.includes('ok') || lowerMessage.includes('certo')) {
+          if (lowerMessage.includes('sГ¬') || lowerMessage.includes('si') || lowerMessage.includes('ok') || lowerMessage.includes('certo')) {
             saveAppointment({
               date: bookingState.data.date, // Note: In a real app, validate format YYYY-MM-DD
               time: bookingState.data.time,
@@ -1609,7 +1638,7 @@
               notes: 'Prenotato via AI'
             });
             bookingState.active = false;
-            return '✅ Prenotazione confermata con successo! La trovi nella sezione "Appuntamenti".';
+            return 'вњ… Prenotazione confermata con successo! La trovi nella sezione "Appuntamenti".';
           } else {
             bookingState.active = false;
             return 'Prenotazione annullata. Se vuoi riprovare, dimmelo pure.';
