@@ -295,6 +295,7 @@
     </div>
 
     <script src="js/auth.js"></script>
+    <script src="js/seedData.js"></script>
     <script>
         function switchAuthMode(mode) {
             const loginForm = document.getElementById('login-form');
@@ -323,26 +324,19 @@
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
 
-            // Check if admin credentials
-            if (email === 'admin@farmacia.it' && password === 'admin123') {
-                const result = adminLogin(email, password);
-                showAlert(result.message, result.success ? 'success' : 'error');
+            const result = login(email, password);
 
-                if (result.success) {
-                    setTimeout(() => {
+            if (result.success) {
+                showAlert(result.message, 'success');
+                setTimeout(() => {
+                    if (result.role === 'admin') {
                         window.location.href = 'admin.html';
-                    }, 1000);
-                }
-            } else {
-                // Regular user login
-                const result = login(email, password);
-                showAlert(result.message, result.success ? 'success' : 'error');
-
-                if (result.success) {
-                    setTimeout(() => {
+                    } else {
                         window.location.href = 'index.html';
-                    }, 1000);
-                }
+                    }
+                }, 1000);
+            } else {
+                showAlert(result.message, 'error');
             }
         }
 
@@ -360,12 +354,14 @@
             }
 
             const result = register(name, email, phone, password);
-            showAlert(result.message, result.success ? 'success' : 'error');
 
             if (result.success) {
+                showAlert(result.message, 'success');
                 setTimeout(() => {
                     window.location.href = 'index.html';
-                }, 1000);
+                }, 1500);
+            } else {
+                showAlert(result.message, 'error');
             }
         }
 

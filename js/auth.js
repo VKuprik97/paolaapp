@@ -164,7 +164,7 @@ function register(name, email, phone, password) {
     }
 }
 
-// Login user
+// Login user (Unified for Admin and User)
 function login(email, password) {
     try {
         initStorage();
@@ -177,6 +177,25 @@ function login(email, password) {
             };
         }
 
+        // 1. Check if it's Admin
+        if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+            const adminUser = {
+                id: 'admin',
+                name: 'Amministratore',
+                email: ADMIN_EMAIL,
+                phone: '',
+                role: 'admin', // Explicit role
+                isAdmin: true
+            };
+            setCurrentUser(adminUser);
+            return {
+                success: true,
+                message: 'Login admin effettuato con successo!',
+                role: 'admin'
+            };
+        }
+
+        // 2. Check if it's a Regular User
         const sanitizedEmail = sanitizeInput(email.trim().toLowerCase());
         const users = safeLocalStorageGet('users', []);
         const user = users.find(u => u.email === sanitizedEmail && u.password === password);
@@ -188,11 +207,14 @@ function login(email, password) {
             };
         }
 
-        setCurrentUser(user);
+        // Add role user
+        const userWithRole = { ...user, role: 'user' };
+        setCurrentUser(userWithRole);
 
         return {
             success: true,
-            message: 'Login effettuato con successo!'
+            message: 'Login effettuato con successo!',
+            role: 'user'
         };
     } catch (error) {
         console.error('Login error:', error);
@@ -520,7 +542,7 @@ const ADMIN_PASSWORD = 'admin123';
 // Check if current user is admin
 function isAdmin() {
     const currentUser = getCurrentUser();
-    return currentUser && currentUser.email === ADMIN_EMAIL;
+    return currentUser && (currentUser.role === 'admin' || currentUser.email === ADMIN_EMAIL);
 }
 
 // Admin login
