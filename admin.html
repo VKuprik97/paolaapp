@@ -63,47 +63,6 @@
             min-height: 100vh;
         }
 
-        /* Login Container */
-        .login-container {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: var(--space-20);
-        }
-
-        .login-card {
-            width: 100%;
-            max-width: 450px;
-            background: var(--color-surface);
-            border-radius: var(--radius-lg);
-            padding: var(--space-32);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .login-header {
-            text-align: center;
-            margin-bottom: var(--space-32);
-        }
-
-        .login-header h1 {
-            font-size: var(--font-size-3xl);
-            font-weight: var(--font-weight-bold);
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: var(--space-8);
-        }
-
-        .login-header p {
-            font-size: var(--font-size-sm);
-            color: var(--color-text-secondary);
-            font-weight: var(--font-weight-medium);
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
         /* Dashboard Container */
         .dashboard-container {
             display: none;
@@ -289,17 +248,6 @@
         }
 
         /* Form Elements */
-        .form-group {
-            margin-bottom: var(--space-16);
-        }
-
-        .form-label {
-            display: block;
-            font-weight: var(--font-weight-medium);
-            margin-bottom: var(--space-8);
-            color: var(--color-text);
-        }
-
         .form-control {
             width: 100%;
             padding: var(--space-16);
@@ -345,6 +293,11 @@
             transform: translateY(-2px);
         }
 
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
         .btn-success {
             background: var(--color-success);
             color: white;
@@ -357,10 +310,6 @@
             color: white;
             padding: var(--space-8) var(--space-16);
             font-size: var(--font-size-sm);
-        }
-
-        .btn-full {
-            width: 100%;
         }
 
         /* Status Badge */
@@ -387,47 +336,42 @@
             color: var(--color-error);
         }
 
-        /* Alert */
-        .alert {
-            padding: var(--space-16);
-            border-radius: var(--radius-sm);
-            margin-bottom: var(--space-16);
-            font-size: var(--font-size-sm);
-            display: none;
-        }
-
-        .alert.show {
-            display: block;
-        }
-
-        .alert-error {
-            background: rgba(255, 107, 107, 0.1);
-            color: var(--color-error);
-            border: 1px solid rgba(255, 107, 107, 0.3);
-        }
-
-        .alert-success {
-            background: rgba(81, 207, 102, 0.1);
-            color: var(--color-success);
-            border: 1px solid rgba(81, 207, 102, 0.3);
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
         /* Search Box */
         .search-box {
             margin-bottom: var(--space-20);
         }
 
         @media (max-width: 768px) {
+            .dashboard-container {
+                padding: var(--space-12);
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--space-16);
+            }
+
+            .dashboard-header>div:last-child {
+                width: 100%;
+                display: flex;
+                gap: var(--space-12);
+            }
+
+            .dashboard-header .btn {
+                flex: 1;
+            }
+
             .stats-grid {
                 grid-template-columns: 1fr;
             }
 
             .tabs {
                 flex-direction: column;
+            }
+
+            .card {
+                padding: var(--space-16);
             }
 
             table {
@@ -437,6 +381,7 @@
             th,
             td {
                 padding: var(--space-8);
+                white-space: nowrap;
             }
         }
     </style>
@@ -444,53 +389,22 @@
 </head>
 
 <body>
-    <!-- Login View -->
-    <div id="login-view" class="login-container">
-        <div class="login-card">
-            <div class="login-header">
-                <h1>Admin Dashboard</h1>
-                <p>FARMACIA CENTRALE</p>
-            </div>
-
-            <div id="login-alert" class="alert"></div>
-
-            <form id="admin-login-form" onsubmit="handleAdminLogin(event)">
-                <div class="form-group">
-                    <label class="form-label">Email Admin</label>
-                    <input type="email" id="admin-email" class="form-control" required placeholder="admin@farmacia.it">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Password</label>
-                    <input type="password" id="admin-password" class="form-control" required placeholder="••••••••">
-                </div>
-                <button type="submit" class="btn btn-primary btn-full">Accedi</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Dashboard View -->
-    <div id="dashboard-view" class="dashboard-container">
+    <!-- Dashboard View (Always Visible if Authorized) -->
+    <div id="dashboard-view" class="dashboard-container" style="display: none;">
         <!-- Header -->
         <div class="dashboard-header">
             <div class="dashboard-title">
                 <h1>Dashboard Amministratore</h1>
                 <p>Gestione Farmacia Centrale</p>
             </div>
-            <button onclick="handleLogout()" class="btn btn-danger">Esci</button>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="handleResetDatabase()" class="btn btn-secondary">Reset DB</button>
+                <button onclick="handleLogout()" class="btn btn-danger">Esci</button>
+            </div>
         </div>
 
         <!-- Statistics -->
         <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-header">
-                    <div class="stat-icon primary">
-                        <i data-lucide="users"></i>
-                    </div>
-                </div>
-                <div class="stat-value" id="stat-users">0</div>
-                <div class="stat-label">Clienti Registrati</div>
-            </div>
-
             <div class="stat-card">
                 <div class="stat-header">
                     <div class="stat-icon success">
@@ -524,8 +438,7 @@
 
         <!-- Tabs -->
         <div class="tabs">
-            <button class="tab active" onclick="switchSection('appointments')">Appuntamenti</button>
-            <button class="tab" onclick="switchSection('clients')">Clienti</button>
+            <button class="tab active" onclick="switchSection('appointments', this)">Appuntamenti</button>
         </div>
 
         <!-- Appointments Section -->
@@ -555,79 +468,43 @@
                 </div>
             </div>
         </div>
-
-        <!-- Clients Section -->
-        <div id="clients-section" class="content-section">
-            <div class="card">
-                <h2>Clienti Registrati</h2>
-                <div class="search-box">
-                    <input type="text" id="client-search" class="form-control" placeholder="Cerca per nome o email..."
-                        onkeyup="filterClients()">
-                </div>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>Email</th>
-                                <th>Telefono</th>
-                                <th>Data Registrazione</th>
-                            </tr>
-                        </thead>
-                        <tbody id="clients-table">
-                            <tr>
-                                <td colspan="4" style="text-align: center;">Nessun cliente</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
     </div>
 
     <script src="js/auth.js"></script>
+    <script src="js/seedData.js"></script>
     <script>
         // Initialize Lucide Icons
-        lucide.createIcons();
+        if (window.lucide) lucide.createIcons();
 
-        // Check if already logged in as admin
-        if (isAdmin()) {
-            showDashboard();
-        }
+        // Check if logged in as admin
+        if (!isAdmin()) {
+            // Redirect to login if not admin
+            window.location.href = 'login.html';
+        } else {
+            // Show dashboard immediately
+            const dashboard = document.getElementById('dashboard-view');
+            if (dashboard) {
+                dashboard.style.display = 'block';
 
-        // Handle admin login
-        function handleAdminLogin(event) {
-            event.preventDefault();
-            const email = document.getElementById('admin-email').value;
-            const password = document.getElementById('admin-password').value;
+                // Initialize data
+                if (typeof seedDatabase === 'function') {
+                    const users = localStorage.getItem('users');
+                    if (!users || JSON.parse(users).length === 0) {
+                        console.log('Admin: Database vuoto, inizializzo dati...');
+                        seedDatabase(true);
+                    }
+                }
 
-            const result = adminLogin(email, password);
-            showAlert(result.message, result.success ? 'success' : 'error');
-
-            if (result.success) {
-                setTimeout(() => {
-                    showDashboard();
-                }, 1000);
+                loadDashboardData();
             }
         }
 
-        // Show alert
-        function showAlert(message, type) {
-            const alert = document.getElementById('login-alert');
-            alert.textContent = message;
-            alert.className = `alert alert-${type} show`;
-
-            setTimeout(() => {
-                alert.classList.remove('show');
-            }, 3000);
-        }
-
-        // Show dashboard
+        // Show dashboard (Helper function kept for compatibility)
         function showDashboard() {
-            document.getElementById('login-view').style.display = 'none';
-            document.getElementById('dashboard-view').style.display = 'block';
+            const dashboard = document.getElementById('dashboard-view');
+            if (dashboard) dashboard.style.display = 'block';
             loadDashboardData();
-            lucide.createIcons();
+            if (window.lucide) lucide.createIcons();
         }
 
         // Load dashboard data
@@ -635,7 +512,6 @@
             // Load statistics
             const stats = getAdminStats();
             if (stats) {
-                document.getElementById('stat-users').textContent = stats.totalUsers;
                 document.getElementById('stat-appointments').textContent = stats.totalAppointments;
                 document.getElementById('stat-today').textContent = stats.appointmentsToday;
                 document.getElementById('stat-pending').textContent = stats.pendingAppointments;
@@ -643,9 +519,6 @@
 
             // Load appointments
             loadAppointments();
-
-            // Load clients
-            loadClients();
         }
 
         // Load appointments
@@ -666,58 +539,23 @@
                     status === 'cancelled' ? 'Cancellato' : 'In Attesa';
 
                 return `
-          <tr>
-            <td>#${apt.id.slice(-6)}</td>
-            <td><strong>${apt.userName}</strong><br><small>${apt.userEmail}</small></td>
-            <td>${formatDate(apt.date)}</td>
-            <td>${apt.time}</td>
-            <td>${apt.service}</td>
-            <td>${apt.userPhone}</td>
-            <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-            <td>
-              ${status !== 'confirmed' ? `<button class="btn btn-success" onclick="confirmAppointment('${apt.id}')">Conferma</button>` : ''}
-              ${status !== 'cancelled' ? `<button class="btn btn-danger" onclick="cancelAppointment('${apt.id}')">Cancella</button>` : ''}
-            </td>
-          </tr>
-        `;
+                    <tr>
+                        <td>#${apt.id.slice(-6)}</td>
+                        <td><strong>${apt.userName}</strong><br><small>${apt.userEmail}</small></td>
+                        <td>${formatDate(apt.date)}</td>
+                        <td>${apt.time}</td>
+                        <td>${apt.service}</td>
+                        <td>${apt.userPhone}</td>
+                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                        <td>
+                            ${status !== 'confirmed' ? `<button class="btn btn-success" onclick="confirmAppointment('${apt.id}')">Conferma</button>` : ''}
+                            ${status !== 'cancelled' ? `<button class="btn btn-danger" onclick="cancelAppointment('${apt.id}')">Cancella</button>` : ''}
+                        </td>
+                    </tr>
+                `;
             }).join('');
 
-            lucide.createIcons();
-        }
-
-        // Load clients
-        let allClients = [];
-        function loadClients() {
-            allClients = getAllUsers();
-            displayClients(allClients);
-        }
-
-        function displayClients(clients) {
-            const tbody = document.getElementById('clients-table');
-
-            if (clients.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Nessun cliente</td></tr>';
-                return;
-            }
-
-            tbody.innerHTML = clients.map(client => `
-        <tr>
-          <td><strong>${client.name}</strong></td>
-          <td>${client.email}</td>
-          <td>${client.phone}</td>
-          <td>${formatDateTime(client.createdAt)}</td>
-        </tr>
-      `).join('');
-        }
-
-        // Filter clients
-        function filterClients() {
-            const search = document.getElementById('client-search').value.toLowerCase();
-            const filtered = allClients.filter(client =>
-                client.name.toLowerCase().includes(search) ||
-                client.email.toLowerCase().includes(search)
-            );
-            displayClients(filtered);
+            if (window.lucide) lucide.createIcons();
         }
 
         // Confirm appointment
@@ -737,10 +575,17 @@
         }
 
         // Switch section
-        function switchSection(section) {
+        function switchSection(section, element) {
             // Update tabs
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            event.target.classList.add('active');
+            // If element is passed, use it, otherwise try to find the button that matches the section
+            if (element) {
+                element.classList.add('active');
+            } else {
+                // Fallback or default state
+                const tabs = document.querySelectorAll('.tab');
+                if (section === 'appointments') tabs[0].classList.add('active');
+            }
 
             // Update sections
             document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
@@ -749,20 +594,51 @@
 
         // Format date
         function formatDate(dateString) {
-            const date = new Date(dateString + 'T00:00:00');
-            return date.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            try {
+                if (!dateString) return 'N/A';
+                const date = new Date(dateString + 'T00:00:00');
+                if (isNaN(date.getTime())) return dateString;
+                return date.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            } catch (e) {
+                console.error('Error formatting date:', e);
+                return dateString || 'N/A';
+            }
         }
 
         // Format datetime
         function formatDateTime(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            try {
+                if (!dateString) return 'N/A';
+                const date = new Date(dateString);
+                if (isNaN(date.getTime())) return 'Data non valida';
+                return date.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            } catch (e) {
+                console.error('Error formatting date:', e);
+                return dateString || 'N/A';
+            }
         }
 
         // Logout
         function handleLogout() {
             if (confirm('Sei sicuro di voler uscire?')) {
                 logout();
+            }
+        }
+
+        // Reset Database
+        function handleResetDatabase() {
+            if (confirm('Attenzione: Questo cancellerà tutti i dati attuali e ripristinerà quelli di esempio. Continuare?')) {
+                if (typeof seedDatabase === 'function') {
+                    const result = seedDatabase(true);
+                    if (result.success) {
+                        alert('Database ripristinato con successo!');
+                        loadDashboardData();
+                    } else {
+                        alert('Errore durante il ripristino: ' + result.message);
+                    }
+                } else {
+                    alert('Errore: Funzione seedDatabase non trovata.');
+                }
             }
         }
     </script>
